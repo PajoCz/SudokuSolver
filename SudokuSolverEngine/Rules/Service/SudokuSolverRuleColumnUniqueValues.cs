@@ -15,16 +15,5 @@ namespace SudokuSolverEngine.Rules.Service
             }
             return true;
         }
-
-        //public bool CheckRuleForBoard(Board p_Board)
-        //{
-        //    for (int x = 0; x < p_Board.Data.GetLength(1); x++)
-        //    for (int y1 = 0; y1 < p_Board.Data.GetLength(0) - 1; y1++)
-        //    for (int y2 = y1 + 1; y2 < p_Board.Data.GetLength(0); y2++)
-        //    {
-        //        if (p_Board.Data[y1, x].Value == p_Board.Data[y2, x].Value) return false;
-        //    }
-        //    return true;
-        //}
     }
 }

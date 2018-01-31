@@ -7,34 +7,37 @@ namespace SudokuSolverEngine
 {
     public class SudokuSolverBase
     {
-        public int CheckRulesForPositionCalled { get; private set; }
+        public delegate void CheckRulesDelegate(Board p_Board, int? p_X, int? p_Y);
+
         private readonly List<ISudokuSolverRule> _Rules;
+
+        private Board _Original;
 
         public SudokuSolverBase(IEnumerable<ISudokuSolverRule> p_Rules)
         {
             _Rules = p_Rules?.ToList();
         }
 
-        public delegate void CheckRulesDelegate(Board p_Board, int? p_X, int? p_Y);
+        public int CheckRulesForPositionCalled { get; private set; }
         public event CheckRulesDelegate CheckRules;
 
-        private Board _Original;
         public Board Solve(Board p_Board)
         {
             CheckRulesForPositionCalled = 0;
             _Original = p_Board;
             var solving = p_Board.CloneDeep(_Original);
-            bool found = CheckSolvedOrSwitchToNextPossibleState(solving, 0);
+            var found = CheckSolvedOrSwitchToNextPossibleState(solving, 0);
             return found ? solving : null;
         }
 
         private bool CheckSolvedOrSwitchToNextPossibleState(Board p_Board, int p_IndexWhereMayIncrementValueIfNotFixed)
         {
-            int x = p_IndexWhereMayIncrementValueIfNotFixed % p_Board.XLen;
-            int y = p_IndexWhereMayIncrementValueIfNotFixed / p_Board.XLen;
+            var x = p_IndexWhereMayIncrementValueIfNotFixed % p_Board.XLen;
+            var y = p_IndexWhereMayIncrementValueIfNotFixed / p_Board.XLen;
 
             if (!p_Board.Data[y, x].FixedValue)
-            {   //NOT FIXED VALUE
+            {
+                //NOT FIXED VALUE
                 while (p_Board.Data[y, x].Value <= 9)
                 {
                     if (p_Board.Data[y, x].Value > 0 && CheckRulesForPosition(p_Board, x, y))
@@ -47,7 +50,8 @@ namespace SudokuSolverEngine
                 p_Board.Data[y, x].ValueToZero();
             }
             else
-            {   //FIXED VALUE
+            {
+                //FIXED VALUE
                 if (SolvedAtIndexSoCheckLastIndexOrCallNextIndexRecursively(p_Board, p_IndexWhereMayIncrementValueIfNotFixed))
                     return true;
             }
@@ -61,9 +65,7 @@ namespace SudokuSolverEngine
                 return true;
 
             if (CheckSolvedOrSwitchToNextPossibleState(p_Board, p_IndexWhereMayIncrementValueIfNotFixed + 1))
-            {
                 return true;
-            }
 
             return false;
         }
