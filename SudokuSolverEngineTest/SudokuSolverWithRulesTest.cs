@@ -11,7 +11,7 @@ namespace SudokuSolverEngineTest
     [TestFixture]
     public class SudokuSolverWithRulesTest
     {
-        private const string LogDataToFileNamePattern = "C:\\SudokuLog-{0}.txt";
+        private const string LogDataToFileNamePattern = "D:\\SudokuLog-{0}.txt";
         private StringBuilder _LogData;
 
         [TestCase("3x9-WithSteps", true)]
